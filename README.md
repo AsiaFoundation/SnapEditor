@@ -6,7 +6,9 @@ plugin.
 
 ## Demo
 
-<a href="http://asiafoundation.github.io/snapeditor/">http://asiafoundation.github.io/snapeditor/</a>
+<a href="http://asiafoundation.github.io/snapeditor/">Adding a shape</a>
+
+<a href="http://asiafoundation.github.io/snapeditor/edit.html">Editing a shape</a>
 
 ## Dependencies
 
