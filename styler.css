@@ -6,3 +6,7 @@ html, body, #map {
   overflow: hidden;
   font-family: arial, sans-serif;
 }
+
+.edit .leaflet-draw.leaflet-control {
+  display: none;
+}

@@ -12,7 +12,7 @@ plugin.
 
 ## Dependencies
 
-Leaflet.GeometryUtil, Leaflet.Draw, Leaflet 0.7
+Leaflet.GeometryUtil, Leaflet.Draw 0.2.3, Leaflet 0.7
 
 ## License
 

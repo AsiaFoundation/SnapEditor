@@ -3,15 +3,23 @@ $(function() {
     attribution: 'Map data &copy; 2016 OpenStreetMap contributors',
   });
 
-  var map = L.map('map')
+  var map = L.map('map', { drawControl: true })
     .setView([48.49, 1.4], 16)
     .addLayer(osm);
 
-  $.getJSON('data/sample.geojson', function (data) {
-    var selection = data.features.splice(Math.floor(Math.random() * data.features.length), 1);
-    var layer = L.geoJson(selection);
-    var lgroup = L.featureGroup([layer]).addTo(map);
+  var makePolyline = function(selection) {
+    var coordinates = selection.geometry.coordinates[0];
+    for (var pt = 0; pt < coordinates.length; pt++) {
+      coordinates[pt].reverse();
+    }
+    //coordinates.pop();
+    return coordinates;
+  };
 
+  $.getJSON('data/sample.geojson', function (data) {
+    var selection = data.features.splice(Math.floor(Math.random() * data.features.length), 1)[0];
+
+    var guideLayers = [];
     var baselayer = L.geoJson(data, {
       style: function() {
         var r = Math.floor(Math.random() * 200);
@@ -25,20 +33,29 @@ $(function() {
         };
       },
       onEachFeature: function(json, layer) {
+        //var coordinates = makePolyline(json);
+        //var border = L.polyline(coordinates).addTo(map);
+        guideLayers.push(layer);
       }
     }).addTo(map);
 
-    var drawControl = new L.Control.Draw({
-      draw: false,
-      edit: {
-        featureGroup: lgroup
-      }
-    });
-    map.addControl(drawControl);
+    var coordinates = makePolyline(selection);
+    var editingPolygon = L.polyline(coordinates).addTo(map);
+    editingPolygon.snapediting = new L.Handler.PolylineSnap(map, editingPolygon);
+    for (var a = 0; a < guideLayers.length; a++) {
+      editingPolygon.snapediting.addGuideLayer(guideLayers[a]);
+    }
+    editingPolygon.snapediting.enable();
 
-    // layer.snapediting = new L.Handler.PolylineSnap(map, layer);
-    // layer.snapediting.addGuideLayer(baselayer);
-    // layer.snapediting.enable();
+    guideLayers.push(editingPolygon);
+
+    map.drawControl.setDrawingOptions({
+      polyline: { guideLayers: guideLayers },
+      polygon: { guideLayers: guideLayers },
+      marker: false,
+      rectangle: false,
+      circle: false
+    });
 
     map.fitBounds( baselayer.getBounds() );
   });
