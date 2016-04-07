@@ -33,14 +33,12 @@ $(function() {
         };
       },
       onEachFeature: function(json, layer) {
-        //var coordinates = makePolyline(json);
-        //var border = L.polyline(coordinates).addTo(map);
-        guideLayers.push(layer);
       }
     }).addTo(map);
+    guideLayers.push(baselayer);
 
     var coordinates = makePolyline(selection);
-    var editingPolygon = L.polyline(coordinates).addTo(map);
+    var editingPolygon = L.polygon([coordinates]).addTo(map);
     editingPolygon.snapediting = new L.Handler.PolylineSnap(map, editingPolygon);
     for (var a = 0; a < guideLayers.length; a++) {
       editingPolygon.snapediting.addGuideLayer(guideLayers[a]);
@@ -55,6 +53,26 @@ $(function() {
       marker: false,
       rectangle: false,
       circle: false
+    });
+
+    map.on('draw:editvertex', function () {
+      console.log(startPt);
+      var modifiable = baselayer.getLayers();
+      var mindist = 100;
+      for (var f = 0; f < modifiable.length; f++) {
+        var latlngs = modifiable[f].getLatLngs();
+        for (var p = 0; p < latlngs.length; p++) {
+          var latdist = Math.abs(latlngs[p].lat - startPt[0]);
+          var lngdist = Math.abs(latlngs[p].lng - startPt[1]);
+          var dist = Math.pow(latdist + lngdist, 0.5);
+          if (dist < 0.000005) {
+            // match
+            latlngs[p] = L.latLng([endPt[0], endPt[1]]);
+            modifiable[f].setLatLngs(latlngs);
+          }
+        }
+      }
+      startPt = null;
     });
 
     map.fitBounds( baselayer.getBounds() );
