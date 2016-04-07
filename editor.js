@@ -1,11 +1,12 @@
 $(function() {
-  var osm = L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; 2016 OpenStreetMap contributors',
-  });
+  //var osm = L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+//    attribution: 'Map data &copy; 2016 OpenStreetMap contributors',
+//  });
+  var googleLayer = new L.Google('ROADMAP');
 
   var map = L.map('map', { drawControl: true })
     .setView([48.49, 1.4], 16)
-    .addLayer(osm);
+    .addLayer(googleLayer);
 
   var makePolyline = function(selection) {
     var coordinates = selection.geometry.coordinates[0];

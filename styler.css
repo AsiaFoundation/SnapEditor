@@ -10,3 +10,7 @@ html, body, #map {
 .edit .leaflet-draw.leaflet-control {
   display: none;
 }
+
+.leaflet-google-layer {
+  z-index: 0 !important;
+}
