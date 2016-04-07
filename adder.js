@@ -1,11 +1,9 @@
 $(function() {
-  var osm = L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; 2016 OpenStreetMap contributors',
-  });
+  var googleLayer = new L.Google('ROADMAP');
 
   var map = L.map('map')
     .setView([48.49, 1.4], 16)
-    .addLayer(osm);
+    .addLayer(googleLayer);
 
   var plotCoordinates = function(coordinates) {
     if (typeof coordinates[0] === 'number') {
