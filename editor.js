@@ -57,7 +57,6 @@ $(function() {
     });
 
     map.on('draw:editvertex', function () {
-      console.log(startPt);
       var modifiable = baselayer.getLayers();
       var mindist = 100;
       for (var f = 0; f < modifiable.length; f++) {
